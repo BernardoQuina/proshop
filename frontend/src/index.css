@@ -1,3 +1,15 @@
 main {
   min-height: 80vh;
 }
+
+h3 {
+  padding: 1rem 0;
+}
+
+.rating span {
+  margin: 0.07rem
+}
+
+.fiveStar {
+  color: rgb(231, 196, 0)
+}
