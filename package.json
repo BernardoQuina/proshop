@@ -1,0 +1,22 @@
+{
+  "name": "proshop",
+  "version": "1.0.0",
+  "description": "Mern shopping cart app",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BernardoQuina/proshop.git"
+  },
+  "author": "Bernardo Quina",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BernardoQuina/proshop/issues"
+  },
+  "homepage": "https://github.com/BernardoQuina/proshop#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
