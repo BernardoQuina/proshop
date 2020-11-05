@@ -5,13 +5,17 @@ import colors from 'colors'
 import morgan from 'morgan'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
 
-import productRoute from './routes/productRoutes.js'
+import productRoutes from './routes/productRoutes.js'
+import userRoutes from './routes/userRoutes.js'
 
 dotenv.config()
 
 connectDB()
 
 const app = express()
+
+// Body parser middleware
+app.use(express.json())
 
 // DEV logging middleware
 if(process.env.NODE_ENV === 'development') {
@@ -24,7 +28,8 @@ app.get('/', (req, res) => {
 })
 
 // Mount routers
-app.use('/api/products', productRoute)
+app.use('/api/products', productRoutes)
+app.use('/api/users', userRoutes)
 
 
 // Error middleware
