@@ -1,11 +1,13 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import CheckoutSteps from '../components/CheckoutSteps'
+import { createOrder } from '../actions/orderActions'
 
-const PlaceOrderScreen = () => {
+const PlaceOrderScreen = ({ history }) => {
+
   const dispatch = useDispatch()
 
   const cart = useSelector(state => state.cart)
@@ -28,18 +30,35 @@ const PlaceOrderScreen = () => {
     cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
   )
 
-  shippingPrice = itemsPrice > 100 ? 'Free Shipping!' : addDecimals(10)
+  shippingPrice = itemsPrice > 100 ? addDecimals(0) : addDecimals(10)
 
   taxPrice = addDecimals(Number((0.23 * itemsPrice).toFixed(2)))
 
-  if(shippingPrice !== 'Free Shipping!') {
-    totalPrice = addDecimals(Number(itemsPrice) + Number(taxPrice) + Number(shippingPrice))
-  } else {
-    totalPrice = addDecimals(Number(itemsPrice) + Number(taxPrice))
-  }
+
+  totalPrice = addDecimals(
+    Number(itemsPrice) + Number(taxPrice) + Number(shippingPrice)
+  )
+
+  const orderCreate = useSelector(state => state.orderCreate)
+  const { order, success, error } = orderCreate
+
+  useEffect(() => {
+    if(success) {
+      history.push(`/order/${order._id}`)
+    }
+    // eslint-disable-next-line
+  }, [history, success])
 
   const placeOrderHandler = () => {
-
+    dispatch(createOrder({
+      orderItems: cartItems,
+      shippingAddress,
+      paymentMethod,
+      itemsPrice,
+      shippingPrice,
+      taxPrice,
+      totalPrice
+    }))
   }
 
   return (
@@ -108,10 +127,10 @@ const PlaceOrderScreen = () => {
                 <Row>
                   <Col>Shipping</Col>
                   <Col>
-                    {shippingPrice !== 'Free Shipping!' ? (
+                    {shippingPrice !== addDecimals(0) ? (
                       <p>$ {shippingPrice}</p> 
                     ) : (
-                      <p>{shippingPrice}</p>
+                      <p style={{ color: 'green' }}>Free Shipping!</p>
                     )}
                     </Col>
                 </Row>
@@ -128,6 +147,11 @@ const PlaceOrderScreen = () => {
                   <Col>$ {totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
+
+              <ListGroup.Item>
+                {error && <Message variant='danger'>{error}</Message>}
+              </ListGroup.Item>
+
               <ListGroup.Item>
                 <Button
                   type='button'
