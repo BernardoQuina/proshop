@@ -1,7 +1,7 @@
 import express from 'express'
 const router = express.Router()
 
-import { addOrderItems, getOrderById } from '../controllers/orderController.js'
+import { addOrderItems, getOrderById, UpdateOrderToPaid } from '../controllers/orderController.js'
 import { protect } from '../middleware/authMiddleware.js'
 
 
@@ -12,6 +12,10 @@ router
 router
   .route('/:id')
     .get(protect, getOrderById)
+
+router
+  .route('/:id/pay')
+    .put(protect, UpdateOrderToPaid)
 
 
 export default router
