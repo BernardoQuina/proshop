@@ -19,7 +19,7 @@ const OrderScreen = ({ match }) => {
       dispatch(getOrderDetails(orderId))
     }
       
-  }, [order, orderId])
+  }, [order, orderId, dispatch])
 
   return loading ? (
     <Loader />
@@ -111,6 +111,7 @@ const OrderScreen = ({ match }) => {
                   <Row>
                     <Col>Shipping</Col>
                     <Col>
+                    {/* eslint-disable-next-line */}
                       {order.shippingPrice != 0 ? (
                         <p>$ {order.shippingPrice}</p> 
                       ) : (
