@@ -4,7 +4,7 @@ import { Table, Button, Row, Col, Image } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import { listProducts } from '../actions/productActions'
+import { listProducts, deleteProduct } from '../actions/productActions'
 
 const ProductListScreen = ({ history, match }) => {
   const dispatch = useDispatch()
@@ -15,6 +15,9 @@ const ProductListScreen = ({ history, match }) => {
   const userLogin = useSelector(state => state.userLogin)
   const { userInfo } = userLogin
 
+  const productDelete = useSelector(state => state.productDelete)
+  const { loading:loadingDelete, error:errorDelete, success:successDelete } = productDelete
+
   useEffect(() => {
     if(userInfo && userInfo.isAdmin) {
       dispatch(listProducts())
@@ -22,15 +25,15 @@ const ProductListScreen = ({ history, match }) => {
       history.push('/login')
     }
     
-  }, [dispatch, history, userInfo])
+  }, [dispatch, history, userInfo, successDelete])
 
   const createProductHandler = (product) => {
     // CREATE PRODUCT
   }
 
   const deleteHandler = (id) => {
-    if(window.confirm('Are you sure you want to delete a user?')) {
-      // DELETE PRODUCTS
+    if(window.confirm('Are you sure you want to delete a product?')) {
+      dispatch(deleteProduct(id))
     }
   }
 
@@ -46,6 +49,8 @@ const ProductListScreen = ({ history, match }) => {
           </Button>
         </Col>
       </Row>
+      {loadingDelete && <Loader />}
+      {errorDelete && <Message variant='danger'>{errorDelete}</Message>}
       {loading ? <Loader /> : error ? (
         <Message variant='danger'>{error}</Message>
       ) : (
