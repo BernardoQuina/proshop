@@ -8,7 +8,9 @@ import Loader from '../components/Loader'
 
 import { listProducts } from '../actions/productActions'
 
-const HomeScreen = () => {
+const HomeScreen = ({ match }) => {
+  const keyword = match.params.keyword
+
   const dispatch = useDispatch()
 
   const productList = useSelector(state => state.productList)
@@ -16,10 +18,9 @@ const HomeScreen = () => {
   const { loading, error, products } = productList
 
   useEffect(() => {
-    if(!products.length && !error) {
-      dispatch(listProducts())
-    }
-  }, [dispatch, error, products.length])
+    dispatch(listProducts(keyword))
+    
+  }, [dispatch, keyword])
 
 
   return (
@@ -30,7 +31,8 @@ const HomeScreen = () => {
       ) : error ? (
         <Message variant='danger'>{error}</Message>
       ) : (
-        <Row> 
+        <Row>
+          {products.length === 0 && <h5>No results found</h5>}
           {products.map(product => (
             <Col
               style={{ display: '-webkit-flex', flexWrap: 'wrap' }} key={product._id}
