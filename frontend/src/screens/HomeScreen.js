@@ -5,22 +5,24 @@ import { Row, Col } from 'react-bootstrap'
 import Product from '../components/Product'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
+import Paginate from '../components/Paginate'
 
 import { listProducts } from '../actions/productActions'
 
 const HomeScreen = ({ match }) => {
   const keyword = match.params.keyword
+  const pageNumber = match.params.pageNumber || 1
 
   const dispatch = useDispatch()
 
   const productList = useSelector(state => state.productList)
 
-  const { loading, error, products } = productList
+  const { loading, error, products, page, pages } = productList
 
   useEffect(() => {
-    dispatch(listProducts(keyword))
+    dispatch(listProducts(keyword, pageNumber))
     
-  }, [dispatch, keyword])
+  }, [dispatch, keyword, pageNumber])
 
 
   return (
@@ -31,17 +33,24 @@ const HomeScreen = ({ match }) => {
       ) : error ? (
         <Message variant='danger'>{error}</Message>
       ) : (
-        <Row>
-          {products.length === 0 && <h5>No results found</h5>}
-          {products.map(product => (
-            <Col
-              style={{ display: '-webkit-flex', flexWrap: 'wrap' }} key={product._id}
-              sm={12} md={6} lg={4} xl={3}
-            >
-              <Product product={product} />
-            </Col>
-          ))}
-        </Row>
+        <Fragment>
+          <Row>
+            {products.length === 0 && <h5>No results found</h5>}
+            {products.map(product => (
+              <Col
+                style={{ display: '-webkit-flex', flexWrap: 'wrap' }} key={product._id}
+                sm={12} md={6} lg={4} xl={3}
+              >
+                <Product product={product} />
+              </Col>
+            ))}
+          </Row>
+          <Paginate
+            pages={pages}
+            page={page}
+            keyword={keyword ? keyword : ''}
+          />
+        </Fragment>
       )}
       
     </Fragment>
