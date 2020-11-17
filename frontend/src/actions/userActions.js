@@ -27,6 +27,7 @@ import {
 } from "../constants/userConstants"
 
 import { ORDER_LIST_MY_RESET } from '../constants/orderConstants'
+import { CART_RESET_ALL_ITEMS } from '../constants/cartConstants'
 
 export const login = (email, password) => async (dispatch) => {
   try {
@@ -73,6 +74,10 @@ export const logout = () => (dispatch) => {
   dispatch({ type: ORDER_LIST_MY_RESET })
 
   dispatch({ type: USER_LIST_RESET })
+
+  dispatch({ type: CART_RESET_ALL_ITEMS })
+
+  localStorage.removeItem('cartItems')
 
   document.location.href = '/login'
 }
